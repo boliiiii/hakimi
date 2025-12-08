@@ -20,12 +20,10 @@ const HakimiAvatar: React.FC<HakimiAvatarProps> = ({ mood, message }) => {
   };
 
   // Cute filter specifically for Ghibli/Soft vibe
-  // Increased saturation and brightness for that "blooming" look
-  const cuteFilter = "sepia(20%) saturate(140%) contrast(110%) brightness(110%) hue-rotate(-10deg)";
+  const cuteFilter = "sepia(10%) saturate(120%) contrast(110%) brightness(105%)";
 
-  // 使用网络上稳定的 Happy Cat (哈基米) 动图资源
-  // 如果您想使用本地图片，请将图片放入 public 目录并在此处引用，例如 "/your-image.jpg"
-  const hakimiImageSrc = "https://media1.tenor.com/m/t1k5kfXjW-IAAAAC/happy-cat-cat.gif";
+  // 使用市面上最常见的 "Happy Happy Happy" 猫咪 GIF (绿幕/快乐猫)
+  const hakimiImageSrc = "https://media.tenor.com/lM4xZzX_XqIAAAAj/happy-happy-happy-cat.gif";
 
   return (
     <div className="flex flex-col items-center justify-center w-full relative z-10 my-2">
@@ -33,11 +31,11 @@ const HakimiAvatar: React.FC<HakimiAvatarProps> = ({ mood, message }) => {
         
         {/* Container for the image with hand-drawn border masking */}
         <div className="w-full h-full overflow-hidden rounded-full border-4 border-ghibli-wood shadow-xl bg-[#FCE8B2] relative">
-           {/* Scale and positioning to center the face perfectly from the source GIF */}
+           {/* Scale and positioning to center the cat */}
            <img 
               src={hakimiImageSrc}
               alt="Hakimi Happy Cat"
-              className="w-full h-full object-cover object-center transform scale-110 translate-y-1"
+              className="w-full h-full object-cover object-center transform scale-125 translate-y-2"
               style={{ filter: cuteFilter }}
            />
 
