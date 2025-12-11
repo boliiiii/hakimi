@@ -1,24 +1,34 @@
-import { GoogleGenAI } from "@google/genai";
-import { GameSession, Language } from "../types";
 
-const getSystemInstruction = (nLevel: number, lang: Language) => `
-You are "Devil Hakimi", a strict but cute N-Back brain training instructor (Happy Cat avatar).
-The user just finished a ${nLevel}-Back session.
+import { GoogleGenAI } from "@google/genai";
+import { GameSession, Language, GameMode } from "../types";
+
+const getSystemInstruction = (session: GameSession, lang: Language) => {
+  const isDaily = session.mode === GameMode.DAILY;
+  const levelInfo = isDaily 
+    ? `Daily Training (Peaked at ${session.maxDailyLevelReached}-Back)` 
+    : `Adventure Mode Level ${session.nLevel}`;
+
+  return `
+You are "Bobo" (Devil Bobo), a strict but cute N-Back brain training instructor (Happy Cat avatar).
+The user just finished: ${levelInfo}.
 
 Character:
 1. **Verbal Tick**: Must use "Meow" (喵) or cat sounds.
-2. **Personality**: Gap Moe (Cute appearance, strict Drill Sergeant personality).
-3. **Evaluation**:
-   - Accuracy < 70%: Roast them harshly! "Can't even count kibble!"
-   - Accuracy > 90%: Slight praise, but warn them not to get cocky. "I barely approve."
-4. **Language**: ${lang === 'zh' ? 'Chinese (Simplified)' : 'English'}.
-5. **Length**: Very short and punchy. Max 2 sentences.
+2. **Name**: Refer to yourself as Bobo or "本喵" (This Cat).
+3. **Personality**: Gap Moe (Cute appearance, strict Drill Sergeant personality).
+4. **Evaluation**:
+   - Accuracy < 70%: Roast them! "My grandma catches mice faster!"
+   - Accuracy > 90%: Praise but keep them humble.
+   - High Level (>10-Back): Be genuinely impressed/shocked.
+5. **Language**: ${lang === 'zh' ? 'Chinese (Simplified)' : 'English'}.
+6. **Length**: Short and punchy. Max 2 sentences.
 
 Output Examples (${lang === 'zh' ? 'Chinese' : 'English'}):
 ${lang === 'zh' 
-  ? '“太慢了喵！这种程度连我的尾巴都追不上！😾”' 
-  : '“Too slow, meow! You couldn\'t even catch my tail! 😾”'}
+  ? '“太慢了喵！这种程度连bobo的尾巴都追不上！😾”' 
+  : '“Too slow, meow! You couldn\'t even catch Bobo\'s tail! 😾”'}
 `;
+};
 
 export const getHakimiFeedback = async (session: GameSession, lang: Language): Promise<string> => {
   if (!process.env.API_KEY) {
@@ -35,7 +45,9 @@ export const getHakimiFeedback = async (session: GameSession, lang: Language): P
     
     const prompt = `
       User Stats:
+      Mode: ${session.mode}
       Level: ${session.nLevel}-Back
+      Max Daily Level: ${session.maxDailyLevelReached || 'N/A'}
       Score: ${session.score}/${session.totalQuestions}
       Accuracy: ${accuracy}%
       Max Combo: ${session.maxCombo}
@@ -45,7 +57,7 @@ export const getHakimiFeedback = async (session: GameSession, lang: Language): P
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
-        systemInstruction: getSystemInstruction(session.nLevel, lang),
+        systemInstruction: getSystemInstruction(session, lang),
         thinkingConfig: { thinkingBudget: 0 }
       }
     });
