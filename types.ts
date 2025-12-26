@@ -7,7 +7,8 @@ export enum GameState {
   FEEDBACK = 'FEEDBACK',
   TUTORIAL = 'TUTORIAL',
   DAILY_SETUP = 'DAILY_SETUP',
-  STAGE_TRANSITION = 'STAGE_TRANSITION'
+  STAGE_TRANSITION = 'STAGE_TRANSITION',
+  SHOP = 'SHOP' // New State
 }
 
 export enum GameMode {
@@ -58,6 +59,25 @@ export interface DailyLog {
   durationMinutes: number;
   nLevel: number; // Max level reached
   score: number;
+}
+
+// --- Gamification Types ---
+
+export enum QuestType {
+  PLAY_TIME = 'PLAY_TIME', // Cumulative minutes
+  TOTAL_SCORE = 'TOTAL_SCORE', // Cumulative correct answers
+  MAX_COMBO = 'MAX_COMBO', // Reach specific combo in one game
+  COMPLETE_SESSION = 'COMPLETE_SESSION' // Finish X games
+}
+
+export interface DailyQuest {
+  id: string;
+  type: QuestType;
+  target: number;
+  progress: number;
+  isClaimed: boolean;
+  description: string;
+  reward: number;
 }
 
 export type Language = 'zh' | 'en';

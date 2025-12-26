@@ -1,5 +1,5 @@
 {
-  "name": "bobo魔鬼特训",
+  "name": "BOBO脑锻炼",
   "description": "基于3DS《脑锻炼：魔鬼特训》的N-Back脑力游戏，含闯关模式(1-30 Back)与自适应每日特训。",
   "requestFramePermissions": []
 }
